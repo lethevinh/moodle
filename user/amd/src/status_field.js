@@ -281,6 +281,12 @@ define(['core/templates',
                 params.timestart = timeStart.getTime() / 1000;
             }
 
+            // Enrol duration.
+            var durationEnrol = $(form).find('[name="duration"]');
+            if (durationEnrol.length != 0 && !durationEnrol.is(':disabled')) {
+                params.timeend = parseFloat(params.timestart) + parseFloat(durationEnrol.val());
+            }
+
             // Enrol time end.
             var timeEndEnabled = $(form).find('[name="timeend[enabled]"]');
             if (timeEndEnabled.is(':checked')) {

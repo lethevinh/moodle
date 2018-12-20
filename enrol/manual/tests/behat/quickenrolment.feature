@@ -108,8 +108,8 @@ Feature: Teacher can search and enrol users one by one into the course
       | student098  | Student   | 098      | student098@example.com  |
       | student099  | Student   | 099      | student099@example.com  |
     And the following "courses" exist:
-      | fullname    | shortname |
-      | Course 001  | C001      |
+      | fullname   | shortname | format | startdate       |
+      | Course 001 | C001      | weeks  | ##1 month ago## |
     And the following "course enrolments" exist:
       | user        | course    | role            |
       | teacher001  | C001      | editingteacher  |
@@ -153,3 +153,65 @@ Feature: Teacher can search and enrol users one by one into the course
     When I set the field "Select users" to "example.com"
     And I click on ".form-autocomplete-downarrow" "css_element" in the "Select users" "form_row"
     Then I should see "Too many users (>100) to show"
+
+  @javascript
+  Scenario: Create enrolment add fill endtime for form create enrol.
+    Given I navigate to course participants
+    # Enrol user to course
+    When I press "Enrol users"
+    Then I set the field "Select users" to "example.com"
+    And I click on ".form-autocomplete-downarrow" "css_element" in the "Select users" "form_row"
+    And I click on "Student 099" item in the autocomplete list
+    Then I should see "Student 099"
+    And I click on "Show more" "button"
+    # fill data to input duration
+    Then "input[name='timeend[enabled]'][checked=checked]" "css_element" should not exist
+    And the "Enrolment duration" "select" should be enabled
+    When I set the field "duration" to "2"
+    # fill data to input end time
+    And I set the field "Starting from" to "2"
+    And I set the field "timeend[enabled]" to "1"
+    And I set the field "timeend[day]" to "10"
+    Then the "Enrolment duration" "select" should be disabled
+    When I click on "Enrol users" "button" in the "Enrol users" "dialogue"
+    And I am on "Course 001" course homepage
+    And I navigate to course participants
+    Then I should see "Student 099"
+    When I click on "Edit enrolment" "icon" in the "Student 099" "table_row"
+    And the field "timeend[day]" matches value "10"
+
+    # Manual enrolments
+    When I am on "Course 001" course homepage
+    And I navigate to course participants
+    And I navigate to "Users > Enrolment methods" in current page administration
+    And I click on "Enrol users" "link" in the "Manual enrolments" "table_row"
+    Then I set the field "Not enrolled users" to "Student 002 (student002@example.com)"
+    And I set the field "Starting from" to "2"
+    And I set the field "timeend[enabled]" to "1"
+    And I set the field "timeend[day]" to "10"
+    When I press "add"
+    Then the "Enrolled users" select box should contain "Student 002 (student002@example.com)"
+    When I am on "Course 001" course homepage
+    And I navigate to course participants
+    Then I should see "Student 002"
+    When I click on "Edit enrolment" "icon" in the "Student 002" "table_row"
+    And the field "timeend[day]" matches value "10"
+
+    # Update Enrol user to course
+    When I am on "Course 001" course homepage
+    Then I navigate to course participants
+    And I click on "Edit enrolment" "icon" in the "Student 099" "table_row"
+    Then the field "timeend[day]" matches value "10"
+    And the "Enrolment duration" "select" should be enabled
+    # fill duration
+    And "input[name='timeend[enabled]'][checked=checked]" "css_element" should not exist
+    And the "Enrolment duration" "select" should be enabled
+    When I set the field "duration" to "2"
+    # fill end time
+    And I set the field "timeend[enabled]" to "1"
+    And I set the field "timeend[day]" to "28"
+    Then the "Enrolment duration" "select" should be disabled
+    When I press "Save changes"
+    And I click on "Edit enrolment" "icon" in the "Student 099" "table_row"
+    Then the field "timeend[day]" matches value "28"
+    And the "Enrolment duration" "select" should be enabled
