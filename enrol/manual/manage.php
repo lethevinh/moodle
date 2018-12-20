@@ -29,6 +29,7 @@ $enrolid      = required_param('enrolid', PARAM_INT);
 $roleid       = optional_param('roleid', -1, PARAM_INT);
 $extendperiod = optional_param('extendperiod', 0, PARAM_INT);
 $extendbase   = optional_param('extendbase', 0, PARAM_INT);
+$timeend      = optional_param_array('timeend', [], PARAM_INT);
 
 $instance = $DB->get_record('enrol', array('id'=>$enrolid, 'enrol'=>'manual'), '*', MUST_EXIST);
 $course = $DB->get_record('course', array('id'=>$instance->courseid), '*', MUST_EXIST);
@@ -135,7 +136,10 @@ if ($canenrol && optional_param('add', false, PARAM_BOOL) && confirm_sesskey()) 
                     break;
             }
 
-            if ($extendperiod <= 0) {
+            if ($timeend) {
+                $timeend = make_timestamp($timeend['year'], $timeend['month'], $timeend['day'], $timeend['hour'],
+                        $timeend['minute']);
+            } else if ($extendperiod <= 0) {
                 $timeend = 0;
             } else {
                 $timeend = $timestart + $extendperiod;
@@ -171,9 +175,10 @@ echo $OUTPUT->heading($instancename);
 
 $addenabled = $canenrol ? '' : 'disabled="disabled"';
 $removeenabled = $canunenrol ? '' : 'disabled="disabled"';
+$PAGE->requires->js_call_amd('enrol_manual/enrolmentform', 'init', [['formid' => 'assignform']]);
 
 ?>
-<form id="assignform" method="post" action="<?php echo $PAGE->url ?>"><div>
+<form id="assignform" method="post" action="<?php echo $PAGE->url ?>" class="mform"><div>
   <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
   <table summary="" class="roleassigntable generaltable generalbox boxaligncenter" cellspacing="0">
@@ -197,6 +202,61 @@ $removeenabled = $canunenrol ? '' : 'disabled="disabled"';
               <p><label for="menuextendbase"><?php print_string('startingfrom') ?></label><br />
               <?php echo html_writer::select($basemenu, 'extendbase', $extendbase, false); ?></p>
 
+              <p><label for="menuextendbase"><?php print_string('enroltimeend', 'enrol') ?></label>
+                  <div class="form-group row fitem" data-groupname="timeend">
+                      <div class="col-md-12 form-inline felement" data-fieldtype="date_time_selector" >
+                          <div class="fdate_time_selector d-flex flex-wrap align-items-center" >
+                              <div class="form-group fitem">
+                                  <label class="col-form-label sr-only" for="id_timeend_day">
+                                    <?php print_string('day', 'form') ?>
+                                  </label>
+                                  <span data-fieldtype="select" >
+                                    <?php echo html_writer::select_time('days', 'timeend[day]', false); ?>
+                                  </span>
+                              </div>
+                              <div class="form-group fitem">
+                                  <label class="col-form-label sr-only" for="id_timeend_month">
+                                    <?php print_string('month', 'form') ?>
+                                  </label>
+                                  <span data-fieldtype="select">
+                                    <?php echo html_writer::select_time('months', 'timeend[month]', false); ?>
+                                  </span>
+                              </div>
+                              <div class="form-group fitem">
+                                  <label class="col-form-label sr-only" for="id_timeend_year">
+                                    <?php print_string('year', 'form') ?>
+                                  </label>
+                                  <span data-fieldtype="select">
+                                    <?php echo html_writer::select_time('years', 'timeend[year]', false); ?>
+                                  </span>
+                              </div>
+                              <div class="form-group fitem">
+                                  <label class="col-form-label sr-only" for="id_timeend_hour">
+                                    <?php print_string('hour', 'form') ?>
+                                  </label>
+                                  <span data-fieldtype="select">
+                                    <?php echo html_writer::select_time('hours', 'timeend[hour]', false); ?>
+                                  </span>
+                              </div>
+                              <div class="form-group fitem">
+                                  <label class="col-form-label sr-only" for="id_timeend_minute">
+                                    <?php print_string('minute', 'form') ?>
+                                  </label>
+                                  <span data-fieldtype="select">
+                                    <?php echo html_writer::select_time('minutes', 'timeend[minute]', false); ?>
+                                  </span>
+                              </div>
+                              <a class="visibleifjs" name="timeend[calendar]" href="#" id="id_timeend_calendar">
+                                  <i class="icon fa fa-calendar fa-fw " aria-hidden="true"></i>
+                              </a>
+                              <label class="form-check fitem">
+                                  <input type="checkbox" name="timeend[enabled]" class="form-check-input" id="id_timeend_enabled"
+                                         value="1" size=""> <?php print_string('enable');?>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+              </p>
               </div>
           </div>
 

@@ -28,11 +28,22 @@ require_once("$CFG->libdir/formslib.php");
 
 class enrol_user_enrolment_form extends moodleform {
     function definition() {
+        global $PAGE;
         $mform = $this->_form;
 
         $ue = $this->_customdata['ue'];
         $instancename = $this->_customdata['enrolinstancename'];
         $modal = !empty($this->_customdata['modal']);
+
+        // Build the list of options for the enrolment period dropdown.
+        $unlimitedperiod = get_string('unlimited');
+        $periodmenu = [];
+        $periodmenu[''] = $unlimitedperiod;
+        for ($i = 1; $i <= 365; $i++) {
+            $seconds = $i * 86400;
+            $periodmenu[$seconds] = get_string('numdays', '', $i);
+        }
+        $duration = floor(($ue->timeend - $ue->timestart) / 86400) * 86400;
 
         $mform->addElement('static', 'enrolmentmethod', get_string('enrolmentmethod', 'enrol'), $instancename);
 
@@ -43,6 +54,8 @@ class enrol_user_enrolment_form extends moodleform {
         }
 
         $mform->addElement('date_time_selector', 'timestart', get_string('enroltimestart', 'enrol'), array('optional' => true));
+        $mform->addElement('select', 'duration', get_string('enrolperiod', 'enrol'), $periodmenu);
+        $mform->setDefault('duration', $duration);
 
         $mform->addElement('date_time_selector', 'timeend', get_string('enroltimeend', 'enrol'), array('optional' => true));
 
@@ -65,6 +78,9 @@ class enrol_user_enrolment_form extends moodleform {
             'timestart' => $ue->timestart,
             'timeend' => $ue->timeend
         ));
+
+        $arguments = ['formid' => $mform->getAttribute('id')];
+        $PAGE->requires->js_call_amd('enrol_manual/enrolmentform', 'init', [$arguments]);
     }
 
     function validation($data, $files) {

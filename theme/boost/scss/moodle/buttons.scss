@@ -30,7 +30,13 @@ p.arrow_button {
     margin-bottom: 3em;
 
     label {
-        display: inline;
+        &:not(.form-check) {
+            display: inline;
+        }
+        input.form-check-input {
+            width: auto;
+            margin-right: 0.25em;
+        }
     }
 }
 
