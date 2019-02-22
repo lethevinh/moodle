@@ -1,3 +1,97 @@
+.md-sticky-wrapper {
+    max-width: 100%;
+    max-height: 80vh;
+    overflow: auto;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 0;
+    transition: width 2s;
+}
+
+.md-sticky-wrapper,
+.md-sticky-wrapper * {
+    -webkit-transition: all 0s;
+    -moz-transition: all 0s;
+    -o-transition: all 0s;
+    transition: all 0s;
+}
+
+.md-sticky-wrapper table {
+    margin-bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    border-spacing: 0;
+    padding: 0;
+    border-collapse: collapse;
+}
+
+.md-sticky-wrapper table tr.md-sticky-top th,
+.md-sticky-wrapper table tr.md-sticky-top td,
+.md-sticky-wrapper table tr.md-sticky-bottom th,
+.md-sticky-wrapper table tr.md-sticky-bottom td {
+    position: relative;
+    z-index: 5;
+}
+
+.md-sticky-wrapper table tr.md-sticky-top th,
+.md-sticky-wrapper table tr.md-sticky-top td {
+    top: 0;
+}
+
+.md-sticky-wrapper table tr.md-sticky-bottom th,
+.md-sticky-wrapper table tr.md-sticky-bottom td {
+    bottom: 0;
+}
+
+.md-sticky-wrapper table td.md-sticky-left,
+.md-sticky-wrapper table th.md-sticky-left,
+.md-sticky-wrapper table td.md-sticky-right,
+.md-sticky-wrapper table th.md-sticky-right {
+    position: relative;
+    z-index: 10;
+}
+
+.md-sticky-wrapper table td.md-sticky-left,
+.md-sticky-wrapper table th.md-sticky-left {
+    left: 0;
+}
+
+.md-sticky-wrapper table td.md-sticky-right,
+.md-sticky-wrapper table th.md-sticky-right {
+    right: 0;
+}
+
+.md-sticky-wrapper table tr.md-sticky-top td.md-sticky-left,
+.md-sticky-wrapper table tr.md-sticky-top th.md-sticky-left,
+.md-sticky-wrapper table tr.md-sticky-top td.md-sticky-right,
+.md-sticky-wrapper table tr.md-sticky-top th.md-sticky-right,
+.md-sticky-wrapper table tr.md-sticky-bottom td.md-sticky-left,
+.md-sticky-wrapper table tr.md-sticky-bottom th.md-sticky-left,
+.md-sticky-wrapper table tr.md-sticky-bottom td.md-sticky-right,
+.md-sticky-wrapper table tr.md-sticky-bottom th.md-sticky-right {
+    z-index: 15;
+}
+
+.md-sticky-wrapper table td.md-sticky-left,
+.md-sticky-wrapper table th.md-sticky-left,
+.md-sticky-wrapper table td.md-sticky-right,
+.md-sticky-wrapper table th.md-sticky-right,
+.md-sticky-wrapper table tr.md-sticky-top th,
+.md-sticky-wrapper table tr.md-sticky-top td,
+.md-sticky-wrapper table tr.md-sticky-bottom th,
+.md-sticky-wrapper table tr.md-sticky-bottom td {
+    position: sticky;
+}
+
+body.safari .md-sticky-wrapper table .md-sticky-left,
+body.safari .md-sticky-wrapper table .md-sticky-right,
+body.safari .md-sticky-wrapper table tr.md-sticky-top th,
+body.safari .md-sticky-wrapper table tr.md-sticky-top td,
+body.safari .md-sticky-wrapper table tr.md-sticky-bottom th,
+body.safari .md-sticky-wrapper table tr.md-sticky-bottom td {
+    position: -webkit-sticky;
+}
+
 /**
  * Container.
  */
