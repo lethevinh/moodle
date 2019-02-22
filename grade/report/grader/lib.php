@@ -1263,7 +1263,7 @@ class grade_report_grader extends grade_report {
         $html = '';
 
         $fulltable = new html_table();
-        $fulltable->attributes['class'] = 'gradereport-grader-table';
+        $fulltable->attributes['class'] = 'gradereport-grader-table sticky-table';
         $fulltable->id = 'user-grades';
         $fulltable->summary = get_string('summarygrader', 'gradereport_grader');
 
