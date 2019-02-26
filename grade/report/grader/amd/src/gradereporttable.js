@@ -27,11 +27,12 @@ define(['jquery', 'core/table-sticky'], function($, TableSticky) {
     return /** @alias module:gradereport_grader/gradereporttable */ {
         initialise: function() {
 
-            TableSticky.init({
+            TableSticky.initialise({
+                table: ".gradereport-grader-table",
                 stickies: {
                     'top': "tbody tr.heading",
                     'bottom': "tbody tr.lastrow",
-                    'left': "tbody tr th.header.c0"
+                    'left': "tbody tr th.header.c0, tbody tr td.c1",
                 }
             });
         }
