@@ -46,6 +46,19 @@ class behat_gradereport_grader extends behat_base {
      */
     public function i_click_on_student_and_grade_item($student, $itemname) {
         $xpath = $this->get_student_and_grade_cell_selector($student, $itemname);
+        $node = $this->get_selected_node("xpath_element", $this->escape($xpath));
+        $id = $node->getAttribute('id');
+
+        $js = <<<JS
+(function(){
+  $(document).ready(function(){
+      var elem = $("#$id");
+      $( ".md-sticky-wrapper" ).scrollLeft(elem.scrollLeft());
+  });
+})()
+JS;
+
+        $this->getSession()->executeScript($js);
 
         $this->execute("behat_general::i_click_on", array($this->escape($xpath), "xpath_element"));
     }

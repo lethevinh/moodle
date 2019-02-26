@@ -22,18 +22,31 @@
  * @copyright  2019 Jun Pataleta <jun@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(['jquery', 'core/table-sticky'], function($, TableSticky) {
+define(['jquery', 'core/table-sticky', 'core/pubsub'], function($, TableSticky, PubSub) {
 
     return /** @alias module:gradereport_grader/gradereporttable */ {
         initialise: function() {
 
-            TableSticky.initialise({
+            PubSub.subscribe('stk:responsive-susses', function(data) {
+                var stickyTable = data.stickytable;
+                stickyTable.wrapperSticky.css('width', $("#page-content").outerWidth() - 50);
+            });
+
+            var tableSticky = TableSticky.init({
                 table: ".gradereport-grader-table",
                 stickies: {
                     'top': "tbody tr.heading",
                     'bottom': "tbody tr.lastrow",
-                    'left': "tbody tr th.header.c0, tbody tr td.c1",
+                    'left': "tbody tr th.header.c0, tbody tr td.userreport",
                 }
+            });
+
+            $(document).on('cie:activate', function() {
+                setTimeout(function() {
+                    PubSub.publish(TableSticky.EVENTS.responsiveStart, {
+                        stickytable: tableSticky
+                    });
+                }, 500);
             });
         }
     };
